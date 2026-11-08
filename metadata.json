@@ -1,0 +1,6 @@
+{
+  "name": "CIDTP 关基智能攻防验证与防御效能评估平台",
+  "description": "国家关键信息基础设施智能攻防验证与防御效能评估平台 (CIDTP)，支持实战化突破推演、10大防御系统对抗测试、六态裁判复核与因果归因矩阵。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
