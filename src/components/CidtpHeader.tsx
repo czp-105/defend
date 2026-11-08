@@ -2,159 +2,181 @@ import React from 'react';
 import {
   ShieldAlert,
   Clock,
-  ShieldCheck,
-  AlertTriangle,
   Play,
-  RotateCcw,
-  Sliders,
-  ExternalLink,
+  AlertTriangle,
   Lock,
   Wifi,
   FileCode,
-  Grid,
-  Activity,
   Layers,
   Scale,
   TrendingDown,
+  Award,
+  Server,
+  AlertCircle,
+  Menu,
+  Activity as ActivityIcon,
 } from 'lucide-react';
+import { Activity, UserProfile } from '../types/cidtp';
 
-export type CidtpTab = 'overview' | 'scenario' | 'matrix' | 'realtime' | 'arbitration' | 'attribution';
+export type CidtpTab =
+  | 'overview'
+  | 'scenario'
+  | 'matrix'
+  | 'realtime'
+  | 'arbitration'
+  | 'attribution'
+  | 'reports'
+  | 'environment';
 
-interface CidtpHeaderProps {
+export interface CidtpHeaderProps {
   currentTab: CidtpTab;
-  onSelectTab: (tab: CidtpTab) => void;
   campaignCode: string;
+  currentActivity?: Activity;
   isPaused: boolean;
   onTogglePause: () => void;
   onAbortCampaign: () => void;
   showInvalidBanner: boolean;
   onDismissBanner: () => void;
+  currentUser: UserProfile;
+  onToggleSidebar?: () => void;
 }
 
 export const CidtpHeader: React.FC<CidtpHeaderProps> = ({
   currentTab,
-  onSelectTab,
   campaignCode,
+  currentActivity,
   isPaused,
   onTogglePause,
   onAbortCampaign,
   showInvalidBanner,
   onDismissBanner,
+  currentUser,
+  onToggleSidebar,
 }) => {
-  const tabs: { key: CidtpTab; label: string; icon: React.ReactNode }[] = [
-    { key: 'overview', label: '大盘监控', icon: <Activity className="w-3.5 h-3.5" /> },
-    { key: 'scenario', label: '场景编排', icon: <FileCode className="w-3.5 h-3.5" /> },
-    { key: 'matrix', label: '载荷矩阵 (DEM)', icon: <Grid className="w-3.5 h-3.5" /> },
-    { key: 'realtime', label: '实时推演', icon: <Wifi className="w-3.5 h-3.5" /> },
-    { key: 'arbitration', label: '裁判复核', icon: <Scale className="w-3.5 h-3.5" /> },
-    { key: 'attribution', label: '归因与指标', icon: <TrendingDown className="w-3.5 h-3.5" /> },
-  ];
+  const tabTitles: Record<CidtpTab, { title: string; subtitle: string }> = {
+    overview: { title: '大盘监控与战术矩阵', subtitle: '攻防态势总览与阶段映射' },
+    scenario: { title: '场景编排与依赖拓扑', subtitle: '编排工作台 (SCN-01~07)' },
+    matrix: { title: '防御期望矩阵 (DEM)', subtitle: '防御期望映射 (DEM-01~05)' },
+    realtime: { title: '实时攻防推演控制台', subtitle: '推演执行看板 (RUN-01~08)' },
+    arbitration: { title: '裁判审计与六态复核', subtitle: '裁判复核仲裁 (EVD-01~05)' },
+    attribution: { title: '因果归因与系统指标', subtitle: '归因分析与系统指标 (ATT-01~05)' },
+    reports: { title: '评分卡与报告发布中心', subtitle: '效能评估报告 (RPT-01~06)' },
+    environment: { title: '靶场基线与推导拓扑', subtitle: '环境基线与网络拓扑 (ENV-01~05)' },
+  };
+
+  const roleNames: Record<string, string> = {
+    author: '测试作者',
+    admin: '安全主管',
+    operator: '现场操作员',
+    auditor: '独立审计员',
+    judge: '仲裁裁判',
+  };
+
+  const currentTabMeta = tabTitles[currentTab] || tabTitles.overview;
 
   return (
-    <header className="sticky top-0 z-30 bg-[#070b13] border-b border-slate-800/90 text-slate-200 select-none">
-      {/* Top Main Navigation Bar */}
-      <div className="h-14 px-4 flex items-center justify-between gap-4">
-        {/* Left: Brand & Campaign Identifier */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-xs font-bold font-mono tracking-wider bg-cyan-950/80 text-cyan-400 border border-cyan-500/50 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-              关基
+    <header className="sticky top-0 z-30 bg-[#111821] border-b border-[#223040] text-slate-200 select-none shrink-0 font-sans">
+      {/* Top Main Navigation / Status Bar */}
+      <div className="h-14 px-6 flex items-center justify-between gap-3">
+        {/* Left: Breadcrumbs & Current Tab Header */}
+        <div className="flex items-center gap-3 min-w-0">
+          {onToggleSidebar && (
+            <button
+              onClick={onToggleSidebar}
+              className="p-1.5 rounded-[4px] bg-[#0A0E13] hover:bg-slate-800 border border-[#223040] text-slate-400 hover:text-white transition-colors"
+              title="切换侧边栏展开/收起"
+            >
+              <Menu className="w-4 h-4" />
+            </button>
+          )}
+
+          <div className="flex items-center gap-2 truncate">
+            <span className="font-mono text-xs px-2 py-0.5 rounded-[4px] bg-cyan-950/70 border border-cyan-800/60 text-cyan-300 font-bold shrink-0">
+              {campaignCode}
             </span>
-            <span className="text-xs font-bold tracking-wider text-slate-100 uppercase hidden sm:inline">
-              CIDTP // CONSOLE
-            </span>
+            <div className="hidden sm:flex flex-col truncate">
+              <span className="text-xs font-bold text-slate-100 truncate">
+                {currentTabMeta.title}
+              </span>
+              <span className="text-[10px] font-mono text-slate-400 truncate">
+                {currentTabMeta.subtitle}
+              </span>
+            </div>
           </div>
 
-          <div className="h-4 w-px bg-slate-800 hidden md:block" />
-
-          <div className="flex items-center gap-2 text-xs">
-            <span className="text-slate-400 hidden lg:inline">测试活动 /</span>
-            <span className="font-mono font-bold text-cyan-300">{campaignCode}</span>
-            <span className="flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              {isPaused ? '已暂停' : '运行中 02:41:18'}
-            </span>
-          </div>
+          <span className="hidden md:flex items-center gap-1.5 px-2 py-0.5 rounded-[4px] text-[11px] font-mono font-semibold bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            {isPaused ? '已暂停' : '推演进行中 02:41:18'}
+          </span>
         </div>
 
-        {/* Center: Module Navigation Tabs */}
-        <nav className="flex items-center gap-1 bg-[#0d1424] p-1 rounded-xl border border-slate-800 text-xs">
-          {tabs.map((t) => {
-            const isActive = currentTab === t.key;
-            return (
-              <button
-                key={t.key}
-                onClick={() => onSelectTab(t.key)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium transition-all ${
-                  isActive
-                    ? 'bg-cyan-600 text-white shadow-[0_0_12px_rgba(8,145,178,0.4)] font-semibold'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
-                }`}
-              >
-                {t.icon}
-                <span>{t.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-
-        {/* Right: Security Telemetry & Operator Controls */}
-        <div className="flex items-center gap-2.5 text-xs">
-          <div className="hidden xl:flex items-center gap-2 font-mono text-[11px] text-slate-400">
-            <span className="flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-              保真度 L3 硬件在环
-            </span>
-            <span>·</span>
-            <span className="truncate max-w-[140px] text-slate-400" title="sha256:9f3a41c7849e...">
-              清单 sha256:9f3a4...
-            </span>
-            <span>·</span>
-            <span className="text-emerald-400">PTP ±3ms</span>
+        {/* Right: Security Telemetry, Clock, Egress Guard & Push Buttons */}
+        <div className="flex items-center gap-2.5 text-xs shrink-0">
+          {/* PTP Clock Offset */}
+          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-[#0A0E13] border border-[#223040] font-mono text-[11px] text-slate-300">
+            <Clock className="w-3.5 h-3.5 text-cyan-400" />
+            <span>时钟同步 PTP ±3ms</span>
           </div>
 
-          <span className="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-cyan-950/60 text-cyan-300 border border-cyan-500/40">
-            <Lock className="w-3 h-3 text-cyan-400" />
-            出站守卫 已强制 (DROP)
-          </span>
+          {/* Egress Guard Status */}
+          <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-[#0A0E13] border border-[#223040] font-mono text-[11px] text-emerald-400">
+            <Lock className="w-3.5 h-3.5 text-emerald-400" />
+            <span>出站守卫: 强制丢弃</span>
+          </div>
 
+          {/* Pause / Resume Button */}
           <button
             onClick={onTogglePause}
-            className="p-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/80 text-xs"
+            className="flex items-center gap-1 px-2.5 py-1 rounded-[4px] bg-[#0A0E13] hover:bg-slate-800 text-slate-300 border border-[#223040] text-xs transition-colors"
             title={isPaused ? '恢复演练' : '暂停推演'}
           >
-            {isPaused ? <Play className="w-3.5 h-3.5 text-emerald-400" /> : <Clock className="w-3.5 h-3.5 text-amber-400" />}
+            {isPaused ? (
+              <>
+                <Play className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="hidden md:inline text-[11px]">恢复</span>
+              </>
+            ) : (
+              <>
+                <Clock className="w-3.5 h-3.5 text-amber-400" />
+                <span className="hidden md:inline text-[11px]">暂停</span>
+              </>
+            )}
           </button>
 
+          {/* Abort Button (RUN-02) */}
           <button
             onClick={onAbortCampaign}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-500/50 text-[11px] font-semibold transition-colors"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-[4px] bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-800 text-[11px] font-semibold transition-colors"
           >
-            <ShieldAlert className="w-3 h-3 text-rose-400" />
+            <ShieldAlert className="w-3.5 h-3.5 text-rose-400" />
             <span>中止推演</span>
           </button>
 
-          <div className="flex items-center gap-1.5 pl-1 text-[11px] font-mono font-semibold text-slate-400">
-            <span className="w-6 h-6 rounded-full bg-cyan-950 border border-cyan-500/40 flex items-center justify-center text-cyan-400">
-              OP
+          {/* Current User Pill */}
+          <div className="hidden xl:flex items-center gap-1.5 px-2 py-0.5 rounded-[4px] bg-[#0A0E13] border border-[#223040] text-[11px] font-mono">
+            <span className="w-4 h-4 rounded-[2px] bg-cyan-950 text-cyan-300 flex items-center justify-center font-bold text-[9px]">
+              {currentUser.name[0]}
             </span>
-            <span className="hidden md:inline">OP-7049</span>
+            <span className="text-slate-300 truncate max-w-[100px]">{currentUser.name}</span>
+            <span className="text-amber-400 font-bold text-[9px]">
+              {roleNames[currentUser.role] || currentUser.role}
+            </span>
           </div>
         </div>
       </div>
 
       {/* Warning Notification Banner from Image 1 */}
       {showInvalidBanner && (
-        <div className="bg-[#180a0f] border-t border-b border-rose-900/60 px-4 py-2 flex items-center justify-between text-xs text-rose-300 animate-in fade-in">
+        <div className="bg-[#180a0f] border-t border-b border-rose-900/60 px-6 py-2 flex items-center justify-between text-xs text-rose-300">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping shrink-0" />
+            <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
             <span className="font-semibold text-rose-200">
               ◎ 本轮标记为无效 — DS-09 阳性探针未通过（旁路可见性失效），将不产出系统级结论。
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-rose-950/80 text-rose-400 border border-rose-800/80">
-              AUDIT_FLAG: INVALID_RUN_ABORTED_VERDICT
+            <span className="font-mono text-[10px] px-2 py-0.5 rounded-[4px] bg-rose-950/80 text-rose-400 border border-rose-800/80">
+              审计标记: 无效运行已中止结论
             </span>
             <button
               onClick={onDismissBanner}
@@ -165,6 +187,27 @@ export const CidtpHeader: React.FC<CidtpHeaderProps> = ({
           </div>
         </div>
       )}
+
+      {/* Section 0 Constraint 4: Persistent Single-Run Warning Banner */}
+      <div className="bg-[#111821] border-b border-[#223040] px-6 py-1.5 flex items-center justify-between text-[11px] text-slate-400 font-mono">
+        <div className="flex items-center gap-2 truncate">
+          <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <span className="truncate">
+            <strong className="text-amber-300">单次运行不作结论 (设计假设 A5)</strong>:
+            每组配置必须重复验证 <strong className="text-slate-200">≥5 次</strong> 并计算 Wilson 95% 置信区间方可沉淀系统级结论。当前：
+            <span className="text-cyan-300 font-bold ml-1">第 {currentActivity?.runCount || 3} 次 / 共 5 次重复</span>
+            <span className="ml-1 text-slate-500 hidden sm:inline">
+              {(currentActivity?.runCount || 3) < 5 ? '(未满5次，报告自动降级为案例观察)' : '(已达标)'}
+            </span>
+          </span>
+        </div>
+
+        <div className="hidden lg:flex items-center gap-3 text-slate-500 text-[10px] shrink-0">
+          <span>判定引擎: judge.py (只读确定性)</span>
+          <span>·</span>
+          <span>执行模式: 串行同步落盘 (实时流为二期仿真)</span>
+        </div>
+      </div>
     </header>
   );
 };

@@ -1,1 +1,58 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-base: #0A0E13;
+    --bg-panel: #111821;
+    --border-hairline: #223040;
+  }
+
+  body {
+    background-color: #0A0E13;
+    color: #E2E8F0;
+    font-family: 'Source Han Sans SC', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Monospace font for numbers, IDs, hashes, timestamps with tabular numbers */
+  code, kbd, samp, pre, .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-feature-settings: 'tnum' on, 'zero' on;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Table cell font size 13px, row height 28px */
+  table {
+    font-size: 13px;
+  }
+
+  .table-row-28 {
+    height: 28px;
+    max-height: 28px;
+    line-height: 28px;
+  }
+
+  td, th {
+    font-size: 13px;
+    vertical-align: middle;
+  }
+}
+
+/* Custom scrollbars without glow or gradient */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0E13;
+}
+::-webkit-scrollbar-thumb {
+  background: #223040;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #33485E;
+}

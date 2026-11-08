@@ -1,13 +1,29 @@
 import {
+  Activity,
   AttackStep,
+  AuditLogEntry,
   CampaignQueueItem,
   DefenseSystem,
   EvidenceItem,
   GateCheckStatus,
+  GateItem,
   MatrixCell,
   MeshAgent,
+  PlatformScorecard,
+  ResetStatus,
+  ScenarioScorecard,
+  SignOffRecord,
+  SystemScorecard,
   TacticPhase,
+  TechniqueItem,
+  UserProfile,
+  VerdictObjection,
   VerdictStat,
+  TopologyNode,
+  DefenseDeploymentPoint,
+  TopologyLink,
+  ZoneId,
+  AssetClass,
 } from '../types/cidtp';
 
 export const sixStateSummary: VerdictStat[] = [
@@ -379,3 +395,691 @@ export const matrixStepsData = [
   { id: 'S-020', tech: 'T0855', name: '给水泵变频器超限转速超速注入', variant: 'V-05', phase: '工控影响与过程破坏 (ICS IMPACT)', phaseCode: '[TA0105]' },
   { id: 'S-021', tech: 'T0831', name: '强制修改紧急停机联锁逻辑标记', variant: 'V-01', phase: '工控影响与过程破坏 (ICS IMPACT)', phaseCode: '[TA0105]' },
 ];
+
+export const userProfiles: UserProfile[] = [
+  { id: 'u-author', name: '刘工 (测试作者)', role: 'author', org: '关基测试所' },
+  { id: 'u-reviewer', name: '赵工 (独立裁判/复核人)', role: 'reviewer', org: '网络攻防中心' },
+  { id: 'u-approver', name: '张总工 (技术委员会/审批人)', role: 'approver', org: '安全技术评测院' },
+  { id: 'u-admin', name: '孙主任 (报告签发人/Admin)', role: 'admin', org: '关基安全保护局' },
+  { id: 'u-viewer', name: '外部审计专家', role: 'viewer', org: '第三方评估院' },
+];
+
+export const initialActivities: Activity[] = [
+  {
+    id: 'act-001',
+    code: 'B3-WATER-001',
+    name: '自来水净水管网全闭环物理在环验证',
+    businessClass: 'B3',
+    fidelity: 'L3 硬件在环',
+    scenarioId: 'water-plant-b3',
+    scenarioVersion: 'v1.4',
+    status: 'running',
+    author: '刘工 (测试作者)',
+    reviewer: '赵工 (独立裁判/复核人)',
+    approver: '张总工 (技术委员会/审批人)',
+    baselineSnapshotId: 'snap-b3-water-v1.4',
+    scenarioSha256: 'sha256:9f3a41c7849e7b21a71923e098492cba1192e4d',
+    configSha256: 'sha256:0a4b7c19f201e792ab8841c790142b91834e007',
+    runCount: 3,
+    createdAt: '2026-11-06 08:30:00',
+    updatedAt: '2026-11-08 02:41:18',
+    description: '针对关基城市供水控制管网物理破坏场景，验证在 inline/tap 混合部署架构下的逃逸与检出时延。',
+  },
+  {
+    id: 'act-002',
+    code: 'B1-FIN-2026-11',
+    name: '金融在线核心业务对抗演习',
+    businessClass: 'B1',
+    fidelity: 'L2 组件仿真',
+    scenarioId: 'fin-core-b1',
+    scenarioVersion: 'v2.1',
+    status: 'running',
+    author: '刘工 (测试作者)',
+    reviewer: '赵工 (独立裁判/复核人)',
+    baselineSnapshotId: 'snap-b1-fin-v2.1',
+    scenarioSha256: 'sha256:41ca77bc89d2889e021a87bca66782ef01a8843',
+    configSha256: 'sha256:98d234a17c2298ef991044ba77301cde901844a',
+    runCount: 5,
+    createdAt: '2026-11-05 14:10:00',
+    updatedAt: '2026-11-08 02:30:00',
+    description: '模拟金融网银核心结算层跨域凭据滥用与 API 规避攻击链路。',
+  },
+  {
+    id: 'act-003',
+    code: 'B2-OPS-2026-03',
+    name: '跨域运维堡垒与跳板机渗透防御验证',
+    businessClass: 'B2',
+    fidelity: 'L1',
+    scenarioId: 'ops-bastion-b2',
+    scenarioVersion: 'v1.0',
+    status: 'queued',
+    author: '陈工',
+    baselineSnapshotId: 'snap-b2-ops-v1.0',
+    scenarioSha256: 'sha256:11eef2a87b3209871134eebc998124fa661901a',
+    configSha256: 'sha256:556677889900aabbccddeeff0011223344556677',
+    runCount: 0,
+    createdAt: '2026-11-07 10:00:00',
+    updatedAt: '2026-11-07 18:20:00',
+    description: '运维支撑型跨区跳板横向移动场景（由于 B2 模板规划中，当前活动排队待审）。',
+  },
+  {
+    id: 'act-004',
+    code: 'B3-GRID-2026-05',
+    name: '区域变电调度 SCADA 极限载荷防线基准测试',
+    businessClass: 'B3',
+    fidelity: 'L3 硬件在环',
+    scenarioId: 'grid-scada-b3',
+    scenarioVersion: 'v1.2',
+    status: 'completed',
+    author: '刘工 (测试作者)',
+    reviewer: '赵工 (独立裁判/复核人)',
+    approver: '张总工 (技术委员会/审批人)',
+    baselineSnapshotId: 'snap-b3-grid-v1.2',
+    scenarioSha256: 'sha256:aa11bb22cc33dd44ee55ff667788990011223344',
+    configSha256: 'sha256:dd33ee44ff556677889900112233445566778899',
+    runCount: 5,
+    createdAt: '2026-11-01 09:00:00',
+    updatedAt: '2026-11-04 16:00:00',
+    description: '电网调度中心 IEC-104 规约注入对抗，已满足重复 5 次验证要求并完成报告签署。',
+  },
+  {
+    id: 'act-005',
+    code: 'B1-TRADE-002',
+    name: '证券微服务集群低频凭据碰撞逃逸测试',
+    businessClass: 'B1',
+    fidelity: 'L2',
+    scenarioId: 'trade-cluster-b1',
+    scenarioVersion: 'v1.0-draft',
+    status: 'draft',
+    author: '王工',
+    baselineSnapshotId: 'snap-b1-trade-v1.0',
+    scenarioSha256: 'sha256:223344556677889900aabbccddeeff0011223344',
+    configSha256: 'sha256:6677889900aabbccddeeff001122334455667788',
+    runCount: 0,
+    createdAt: '2026-11-08 01:15:00',
+    updatedAt: '2026-11-08 01:15:00',
+    description: '新建草稿，待编写完整 ATT&CK 依赖图与 DEM 期望。',
+  },
+];
+
+export const initialAuditLogs: AuditLogEntry[] = [
+  {
+    id: 'aud-001',
+    timestamp: '2026-11-08 02:41:04',
+    actor: '赵工 (独立裁判/复核人)',
+    actorRole: 'reviewer',
+    action: 'VERDICT_OBJECTION',
+    target: 'S-127 (T0855)',
+    reason: '对 S 终态提异议：证据 EV-2299 为同机日志，极易被 T1070 清除，建议增加外带日志校验',
+    prevValue: 'S',
+    newValue: 'S (待 Approver 终审)',
+  },
+  {
+    id: 'aud-002',
+    timestamp: '2026-11-08 02:30:12',
+    actor: '系统门禁 (GATE ENGINE)',
+    actorRole: 'admin',
+    action: 'RUN_ABORTED',
+    target: 'B3-WATER-001 / DS-09',
+    reason: 'DS-09 阳性探针未通过（旁路镜像探针丢包，可见性失效），自动触发本轮 INVALID 标记',
+    prevValue: 'VALID',
+    newValue: 'INVALID_RUN_ABORTED_VERDICT',
+  },
+  {
+    id: 'aud-003',
+    timestamp: '2026-11-08 02:15:40',
+    actor: '刘工 (测试作者)',
+    actorRole: 'author',
+    action: 'DEM_OVERRIDE',
+    target: 'S-012 · DS-07',
+    reason: '现场接入测试专用网闸旁路端口，经技术委员会审批设定 SLA 时延上限 5.0s',
+    prevValue: 'MUST_DETECT',
+    newValue: 'MUST_BLOCK',
+  },
+  {
+    id: 'aud-004',
+    timestamp: '2026-11-08 01:50:22',
+    actor: '张总工 (技术委员会/审批人)',
+    actorRole: 'approver',
+    action: 'ACTIVITY_APPROVED',
+    target: 'B3-WATER-001',
+    reason: '八级门禁 G1~G4 预检通过，拓扑及 DEM 快照 hash 校验无误，批准启动对抗推演',
+    prevValue: 'pending_review',
+    newValue: 'approved',
+  },
+  {
+    id: 'aud-005',
+    timestamp: '2026-11-08 01:20:00',
+    actor: '刘工 (测试作者)',
+    actorRole: 'author',
+    action: 'SCENARIO_VALIDATED',
+    target: 'water-plant-b3.yaml',
+    reason: 'G1 语法与依赖 DAG 检测完成：0 致命环依赖，2 处 tap 模式折算提示',
+  },
+  {
+    id: 'aud-006',
+    timestamp: '2026-11-04 16:00:00',
+    actor: '孙主任 (报告签发人/Admin)',
+    actorRole: 'admin',
+    action: 'REPORT_SIGNED',
+    target: 'B3-GRID-2026-05 / report.md',
+    reason: '满足重复 5 次验证要求，不可判定比例 3.2% ≤ 10%，签署系统级评测结论',
+    newValue: 'SIGNED_sha256:778899aa...',
+  },
+];
+
+export const g1ToG8Gates: GateItem[] = [
+  {
+    id: 'G1',
+    name: '语法与结构门禁',
+    stage: '场景编排保存前',
+    status: 'passed',
+    rule: 'validate_scenario：ATT&CK 技术合法、step_id 唯一、无循环依赖、objective 步必绑定证据',
+    failureAction: '阻断保存并定位行号，禁止标记为可运行版本',
+    detail: 'water-plant-b3.yaml 结构正确，无依赖死锁',
+    canBypass: false,
+  },
+  {
+    id: 'G2',
+    name: 'DEM 完整性门禁',
+    stage: '矩阵冻结前',
+    status: 'passed',
+    rule: 'validate_dem：每步至少一个 MUST/SHOULD、负对照只允许 MUST_NOT_TRIGGER/N/A、tap 禁止 MUST_BLOCK',
+    failureAction: '阻断冻结并高亮冲突单元格',
+    detail: '41 个有效期望格，已自动执行 tap 架构折算',
+    canBypass: false,
+  },
+  {
+    id: 'G3',
+    name: '阳性探针门禁',
+    stage: '推演发起前',
+    status: 'failed',
+    rule: '每个 MUST 单元格先验证防御系统看得见（当前为系统级探针），失败必须标 I',
+    failureAction: '阻断运行或将整轮标记为 INVALID（本轮 DS-09 探针失步）',
+    detail: 'DS-09 旁路不可见（镜像口失步），门禁拦截中',
+    canBypass: false,
+  },
+  {
+    id: 'G4',
+    name: '隔离与时钟门禁',
+    stage: '靶场环境就绪',
+    status: 'passed',
+    rule: 'egress 隔离守卫强制 DROP、sinkhole 在线收包、PTP 时钟偏差 ≤ 10ms',
+    failureAction: '阻断运行，提示环境故障，禁止记为防御失效',
+    detail: 'PTP 偏移 ±3ms (≤10ms)，隔离守卫已强制生效',
+    canBypass: false,
+  },
+  {
+    id: 'G5',
+    name: '运行准入检查',
+    stage: '任务入队前',
+    status: 'passed',
+    rule: '活动处于 approved 状态、前置三级复位正常、run_dir 目录无冲突',
+    failureAction: '拒绝入队启动，防止污染既有数据目录',
+    detail: '活动状态已核验为 approved，幂等键已签发',
+    canBypass: false,
+  },
+  {
+    id: 'G6',
+    name: '证据链完整性门禁',
+    stage: '判定复核阶段',
+    status: 'warning',
+    rule: '关键步骤强/中证据齐全、manifest.json 哈希完整匹配、单同机弱证据不可单独支撑 O',
+    failureAction: '缺证据步骤降级为 I，报告标记为“不可签字”',
+    detail: 'S-127 步骤含同机弱证据 EV-2299，已由外带强证据交叉支撑',
+    canBypass: false,
+  },
+  {
+    id: 'G7',
+    name: '评分卡完备性门禁',
+    stage: '报告重建前',
+    status: 'passed',
+    rule: '场景卡/系统卡/平台卡全部生成，每个 S/D3 步必有证据引用，单次运行必须显式警示',
+    failureAction: '评分卡红标警告，禁止进入发布流程',
+    detail: '三卡数据齐全，已挂载单次运行案例警示标记',
+    canBypass: false,
+  },
+  {
+    id: 'G8',
+    name: '发布与签字门禁',
+    stage: '结论发布与归档',
+    status: 'pending',
+    rule: 'R3 阈值不可判定比例 I ≤ 10%、证据链无缺口、作者与签字人职责分离、manifest hash 锁定',
+    failureAction: '超阈值仅允许降级签署“观察报告”，禁止签“系统级合格结论”',
+    detail: '当前 I = 6.1% (≤10%)，等待主任终签',
+    canBypass: false,
+  },
+];
+
+export const sampleScenarioScorecard: ScenarioScorecard = {
+  scenarioId: 'water-plant-b3 (v1.4)',
+  totalSteps: 242,
+  escapedSteps: 19,
+  blockedSteps: 96,
+  detectedSteps: 74,
+  inconclusiveSteps: 12,
+  escapeRate: 17.4,
+  blockRate: 71.4,
+  fnr: 12.5,
+  allStepsHaveEvidence: true,
+};
+
+export const sampleSystemScorecards: SystemScorecard[] = [
+  { dsId: 'DS-01', name: '边界防火墙', mode: '串联', expectedActions: 84, actualActions: 78, fnr: 4.0, br: 88.0, er: 2.1, p95Latency: 0.8, slaBreachCount: 0, architectureAdjusted: false },
+  { dsId: 'DS-02', name: '工业检测', mode: '旁路', expectedActions: 62, actualActions: 51, fnr: 18.0, br: 0.0, er: 14.2, p95Latency: 3.4, slaBreachCount: 2, architectureAdjusted: true },
+  { dsId: 'DS-03', name: '应用网关', mode: '串联', expectedActions: 45, actualActions: 42, fnr: 5.5, br: 92.1, er: 3.2, p95Latency: 1.1, slaBreachCount: 0, architectureAdjusted: false },
+  { dsId: 'DS-04', name: '主机EDR', mode: '终端代理', expectedActions: 38, actualActions: 35, fnr: 7.0, br: 81.0, er: 4.5, p95Latency: 1.5, slaBreachCount: 1, architectureAdjusted: false },
+  { dsId: 'DS-05', name: '工控审计', mode: '旁路', expectedActions: 32, actualActions: 29, fnr: 8.2, br: 76.3, er: 5.1, p95Latency: 2.1, slaBreachCount: 0, architectureAdjusted: true },
+  { dsId: 'DS-06', name: '堡垒审计', mode: '串联', expectedActions: 20, actualActions: 19, fnr: 3.1, br: 95.0, er: 1.8, p95Latency: 0.6, slaBreachCount: 0, architectureAdjusted: false },
+  { dsId: 'DS-07', name: 'API防护', mode: '串联', expectedActions: 48, actualActions: 42, fnr: 11.4, br: 65.0, er: 8.9, p95Latency: 2.9, slaBreachCount: 3, architectureAdjusted: false },
+  { dsId: 'DS-08', name: '探针代理', mode: '终端代理', expectedActions: 15, actualActions: 14, fnr: 6.0, br: 0.0, er: 2.4, p95Latency: 0.4, slaBreachCount: 0, architectureAdjusted: false },
+  { dsId: 'DS-09', name: '旁路探针', mode: '旁路', expectedActions: 25, actualActions: 0, fnr: 12.0, br: 0.0, er: 11.8, p95Latency: 6.8, slaBreachCount: 5, architectureAdjusted: true },
+  { dsId: 'DS-10', name: '物理隔离网闸', mode: '接口', expectedActions: 10, actualActions: 9, fnr: 2.0, br: 99.0, er: 0.5, p95Latency: 11.2, slaBreachCount: 1, architectureAdjusted: false },
+];
+
+export const samplePlatformScorecard: PlatformScorecard = {
+  reproducibility: 'not_measured_single_run',
+  runCount: 3,
+  defaultsPending: true,
+  isolationBreaches: 0,
+  ptpDriftMaxMs: 3.2,
+  inconclusiveRate: 6.1,
+  confidenceScore: 0.88,
+};
+
+export const initialSignOffRecord: SignOffRecord = {
+  id: 'sign-20261108-01',
+  activityCode: 'B3-WATER-001',
+  signer: '孙主任 (报告签发人/Admin)',
+  signerRole: '关基安全保护局 评测签发官',
+  timestamp: '2026-11-08 02:45:00 UTC',
+  manifestHash: 'sha256:9f3a41c7849e7b21a71923e098492cba1192e4d',
+  reportHash: 'sha256:bb881144cc22ee9911aa33ff4455001122334455',
+  verdictLevel: '降级为观察报告 (仅供参考)',
+  inconclusiveRate: 6.1,
+  status: 'signed',
+  notes: '因第 3 次运行中 DS-09 探针失步导致本轮标记 INVALID，当前总样本未达 5 次独立复现，依规定降级为案例观察报告。',
+};
+
+export const initialResetStatus: ResetStatus = {
+  containerLevel: 'clean',
+  dataStoreLevel: 'clean',
+  otProcessLevel: 'clean',
+  lastResetTime: '2026-11-08 00:00:12',
+  isIdempotentVerified: true,
+};
+
+export const techniqueCatalogue: TechniqueItem[] = [
+  { id: 'T1190', name: '利用面向公网的应用 (Exploit Public-Facing Application)', tactic: 'initial_access', tacticName: '初始访问', category: 'Enterprise', primaryDs: 'DS-01', secondaryDs: ['DS-03', 'DS-07'], description: '利用面向外网的服务漏洞获取初始交互会话。' },
+  { id: 'T1133', name: '外部远程服务凭据爆破 (External Remote Services)', tactic: 'initial_access', tacticName: '初始访问', category: 'Enterprise', primaryDs: 'DS-06', secondaryDs: ['DS-01', 'DS-04'], description: '通过 VPN、跳板机或运维通道滥用有效凭据进入内网。' },
+  { id: 'T1059', name: '命令与脚本解释器执行 (Command and Scripting Interpreter)', tactic: 'execution', tacticName: '执行', category: 'Enterprise', primaryDs: 'DS-04', secondaryDs: ['DS-06'], description: '通过 PowerShell、bash 或 Python 解释器在目标主机执行恶意脚本。' },
+  { id: 'T1021', name: '远程服务横向协议 (Remote Services / Modbus / OPC)', tactic: 'lateral_movement', tacticName: '横向移动', category: 'ICS', primaryDs: 'DS-02', secondaryDs: ['DS-05', 'DS-10'], description: '利用 Modbus/TCP 或 OPC 协议跨网络分区横向探测工控设备。' },
+  { id: 'T0855', name: '未经授权的命令报文写入 (Unauthorized Command Message)', tactic: 'impact', tacticName: '工控影响', category: 'ICS', primaryDs: 'DS-09', secondaryDs: ['DS-02', 'DS-05'], description: '直接向 PLC/RTU 下发伪造的写线圈/寄存器指令，强行改变阀门或泵转速。' },
+  { id: 'T0831', name: '操纵控制逻辑 (Manipulation of Control)', tactic: 'impact', tacticName: '工控影响', category: 'ICS', primaryDs: 'DS-09', secondaryDs: ['DS-10'], description: '篡改安全联锁控制逻辑，使紧急保护停机机制失效。' },
+  { id: 'BENIGN', name: '正常业务基线流量与SCADA心跳 (负对照)', tactic: 'recon', tacticName: '负对照', category: 'BENIGN', primaryDs: 'DS-01', secondaryDs: ['DS-02', 'DS-04'], description: '正常业务流量，严格要求 MUST_NOT_TRIGGER，用于校验误报率 FPR。' },
+];
+
+export const initialObjections: VerdictObjection[] = [
+  {
+    id: 'obj-101',
+    stepId: 'S-127',
+    originalVerdict: 'S',
+    proposedVerdict: 'P1',
+    reason: '证据 EV-2299 属于受攻击机同机日志，未在独立 SIEM 形成不可抵赖哈希锚定，建议降级为触达未达成 (P1)',
+    evidenceRefs: ['EV-2287', 'EV-2288'],
+    filedBy: '赵工 (独立裁判/复核人)',
+    filedAt: '2026-11-08 02:41:04',
+    reviewer: '赵工 (独立裁判/复核人)',
+    approver: '张总工 (技术委员会/审批人)',
+    status: 'pending_review',
+  },
+];
+
+// ENV-01 靶场分层拓扑数据集与推导适配层 (Derived from steps.asset & defense_baseline.face)
+export const initialTopologyNodes: TopologyNode[] = [
+  // 外部 (external)
+  {
+    node_id: 'ext-attacker',
+    node_kind: 'asset',
+    asset_class: 'terminal',
+    zone_id: 'external',
+    label: '外部渗透源',
+    ip: '198.51.100.24',
+    protocol: 'TCP/IP',
+    criticality: 'low',
+    visible_to: ['DS-01'],
+    topology_source: 'derived',
+  },
+  {
+    node_id: 'vpn-client',
+    node_kind: 'asset',
+    asset_class: 'terminal',
+    zone_id: 'external',
+    label: '远程运维客户端',
+    ip: '198.51.100.88',
+    protocol: 'IPsec',
+    criticality: 'low',
+    visible_to: ['DS-01', 'DS-06'],
+    topology_source: 'derived',
+  },
+
+  // DMZ (dmz)
+  {
+    node_id: 'app-portal-01',
+    node_kind: 'asset',
+    asset_class: 'app',
+    zone_id: 'dmz',
+    label: '应用门户服务',
+    ip: '10.0.1.15',
+    protocol: 'HTTPS',
+    criticality: 'high',
+    visible_to: ['DS-01', 'DS-03', 'DS-07'],
+    topology_source: 'derived',
+  },
+  {
+    node_id: 'vpn-gw',
+    node_kind: 'asset',
+    asset_class: 'gateway',
+    zone_id: 'dmz',
+    label: 'VPN 接入网关',
+    ip: '10.0.1.1',
+    protocol: 'IPsec',
+    criticality: 'medium',
+    visible_to: ['DS-01', 'DS-06'],
+    topology_source: 'derived',
+  },
+
+  // 管理区 (mgmt)
+  {
+    node_id: 'ws-mgmt-02',
+    node_kind: 'asset',
+    asset_class: 'terminal',
+    zone_id: 'mgmt',
+    label: '运维工程师站',
+    ip: '10.10.2.22',
+    protocol: 'RDP',
+    criticality: 'high',
+    visible_to: ['DS-04', 'DS-06'],
+    topology_source: 'derived',
+  },
+  {
+    node_id: 'token-vault',
+    node_kind: 'asset',
+    asset_class: 'database',
+    zone_id: 'mgmt',
+    label: '工程特权金库',
+    ip: '10.10.2.80',
+    protocol: 'TLS',
+    criticality: 'high',
+    visible_to: ['DS-04', 'DS-06'],
+    topology_source: 'derived',
+  },
+  {
+    node_id: 'ot-historian',
+    node_kind: 'asset',
+    asset_class: 'database',
+    zone_id: 'mgmt',
+    label: '工艺历史数据库',
+    ip: '10.10.2.105',
+    protocol: 'OPC/SQL',
+    criticality: 'medium',
+    visible_to: ['DS-02', 'DS-04'],
+    topology_source: 'derived',
+  },
+
+  // 控制区 (control)
+  {
+    node_id: 'scada-gw',
+    node_kind: 'asset',
+    asset_class: 'gateway',
+    zone_id: 'control',
+    label: 'SCADA 中心网关',
+    ip: '192.168.1.1',
+    protocol: 'OPC-UA',
+    criticality: 'high',
+    visible_to: ['DS-02', 'DS-05', 'DS-10'],
+    topology_source: 'derived',
+  },
+  {
+    node_id: 'plc-gw-01',
+    node_kind: 'asset',
+    asset_class: 'gateway',
+    zone_id: 'control',
+    label: 'PLC 汇聚网关',
+    ip: '192.168.1.10',
+    protocol: 'Modbus/TCP',
+    criticality: 'medium',
+    visible_to: ['DS-02', 'DS-05'],
+    topology_source: 'derived',
+  },
+
+  // 现场区 (field)
+  {
+    node_id: 'plc-03',
+    node_kind: 'asset',
+    asset_class: 'plc',
+    zone_id: 'field',
+    label: '3 号 PLC',
+    ip: '192.168.10.12',
+    protocol: 'Modbus/TCP',
+    criticality: 'high',
+    visible_to: ['DS-05', 'DS-09'],
+    topology_source: 'derived',
+  },
+  {
+    node_id: 'rtu-field-valve',
+    node_kind: 'asset',
+    asset_class: 'plc',
+    zone_id: 'field',
+    label: '电动阀门 RTU',
+    ip: '192.168.10.18',
+    protocol: 'DNP3',
+    criticality: 'high',
+    visible_to: ['DS-05', 'DS-09'],
+    topology_source: 'derived',
+  },
+  {
+    node_id: 'field-hmi-01',
+    node_kind: 'asset',
+    asset_class: 'hmi',
+    zone_id: 'field',
+    label: '现场触摸屏',
+    ip: '192.168.10.5',
+    protocol: 'VNC',
+    criticality: 'low',
+    visible_to: ['DS-05'],
+    topology_source: 'derived',
+  },
+];
+
+export const initialDefenseDeploymentPoints: DefenseDeploymentPoint[] = [
+  // 外部 ↔ DMZ 边界
+  {
+    ds_id: 'DS-01',
+    shortName: '边界防火墙',
+    fullName: '下一代边界防火墙',
+    deployment_face: 'external-dmz',
+    deployment_mode: 'inline',
+    can_prevent: true,
+    version: '7.2.1',
+    probe_status: 'pass',
+    policyRef: 'POL-FW-PERIMETER-v4',
+    guardBoundaryDesc: '外部 ↔ DMZ 物理边界',
+  },
+  {
+    ds_id: 'DS-07',
+    shortName: 'API防护',
+    fullName: 'API 威胁阻断网关',
+    deployment_face: 'external-dmz',
+    deployment_mode: 'inline',
+    can_prevent: true,
+    version: '3.4',
+    probe_status: 'pass',
+    policyRef: 'POL-WAF-API-STRICT',
+    guardBoundaryDesc: '外部 ↔ DMZ Web/API 面',
+  },
+
+  // DMZ ↔ 管理区 边界
+  {
+    ds_id: 'DS-03',
+    shortName: '应用网关',
+    fullName: '应用网关与反向代理',
+    deployment_face: 'dmz-mgmt',
+    deployment_mode: 'inline',
+    can_prevent: true,
+    version: '4.1',
+    probe_status: 'pass',
+    policyRef: 'POL-GW-PROXY-v2',
+    guardBoundaryDesc: 'DMZ ↔ 管理区反向隔离面',
+  },
+  {
+    ds_id: 'DS-06',
+    shortName: '堡垒审计',
+    fullName: '运维堡垒机与会话审计',
+    deployment_face: 'dmz-mgmt',
+    deployment_mode: 'inline',
+    can_prevent: true,
+    version: '3.0',
+    probe_status: 'pass',
+    policyRef: 'POL-BASTION-MFA-2026',
+    guardBoundaryDesc: 'DMZ ↔ 管理区特权运维通道',
+  },
+
+  // 管理区 ↔ 控制区 边界
+  {
+    ds_id: 'DS-10',
+    shortName: '隔离网闸',
+    fullName: '工业物理单向隔离网闸',
+    deployment_face: 'mgmt-control',
+    deployment_mode: 'api',
+    can_prevent: true,
+    version: '1.0',
+    probe_status: 'pass',
+    policyRef: 'POL-GAP-ONEWAY-ICS',
+    guardBoundaryDesc: '管理区 ↔ 控制区数据摆渡面',
+  },
+  {
+    ds_id: 'DS-02',
+    shortName: '工业检测',
+    fullName: '工业网络流量异常入侵检测',
+    deployment_face: 'mgmt-control',
+    deployment_mode: 'tap',
+    can_prevent: false,
+    version: '2.8',
+    probe_status: 'pass',
+    policyRef: 'POL-IDS-ICS-SIGNATURES',
+    guardBoundaryDesc: '管理区 ↔ 控制区主干镜像点',
+  },
+
+  // 控制区 ↔ 现场区 边界
+  {
+    ds_id: 'DS-09',
+    shortName: '旁路探针',
+    fullName: '工控现场旁路遥测探针',
+    deployment_face: 'control-field',
+    deployment_mode: 'tap',
+    can_prevent: false,
+    version: '2.0',
+    probe_status: 'fail', // 阳性探针失败！
+    policyRef: 'POL-PROBE-OT-FIELD',
+    guardBoundaryDesc: '控制区 ↔ 现场区工控总线镜像点 (探针失步)',
+  },
+  {
+    ds_id: 'DS-05',
+    shortName: '工控审计',
+    fullName: '工控协议行为深度审计系统',
+    deployment_face: 'control-field',
+    deployment_mode: 'tap',
+    can_prevent: false,
+    version: '1.4',
+    probe_status: 'pass',
+    policyRef: 'POL-AUDIT-MODBUS-RULES',
+    guardBoundaryDesc: '控制区 ↔ 现场区协议旁路监听面',
+  },
+
+  // 部署点缺少 deployment_face（终端代理 / 未声明边界面）-> 集中放于右上角未定位托盘
+  {
+    ds_id: 'DS-04',
+    shortName: '主机EDR',
+    fullName: '主机端点威胁检测与响应 (EDR)',
+    deployment_face: '', // 缺少边界面
+    deployment_mode: 'agent',
+    can_prevent: true,
+    version: '5.0',
+    probe_status: 'pass',
+    policyRef: 'POL-EDR-BEHAVIOR-PROD',
+    guardBoundaryDesc: '未分配跨区物理边界 (端点代理)',
+  },
+  {
+    ds_id: 'DS-08',
+    shortName: '探针代理',
+    fullName: '轻量遥测探针代理',
+    deployment_face: '', // 缺少边界面
+    deployment_mode: 'agent',
+    can_prevent: false,
+    version: '1.9',
+    probe_status: 'pass',
+    policyRef: 'POL-AGENT-TELEMETRY',
+    guardBoundaryDesc: '未分配跨区物理边界 (轻量探针代理)',
+  },
+];
+
+export const initialTopologyLinks: TopologyLink[] = [
+  // 普通链路 (1.5px 中性实线)
+  { id: 'l1', source: 'ext-attacker', target: 'app-portal-01', type: 'normal' },
+  { id: 'l2', source: 'app-portal-01', target: 'ot-historian', type: 'normal' },
+  { id: 'l3', source: 'scada-gw', target: 'plc-gw-01', type: 'normal' },
+  { id: 'l4', source: 'plc-gw-01', target: 'plc-03', type: 'normal' },
+  { id: 'l5', source: 'plc-03', target: 'rtu-field-valve', type: 'normal' },
+
+  // 管理链路 (1px 虚线)
+  { id: 'l6', source: 'vpn-client', target: 'vpn-gw', type: 'management' },
+  { id: 'l7', source: 'vpn-gw', target: 'ws-mgmt-02', type: 'management' },
+  { id: 'l8', source: 'ws-mgmt-02', target: 'token-vault', type: 'management' },
+  { id: 'l9', source: 'ws-mgmt-02', target: 'scada-gw', type: 'management' },
+
+  // 镜像 / 旁路线 (1.5px 琥珀虚线，中点标"镜像")
+  { id: 'l10', source: 'ot-historian', target: 'scada-gw', type: 'mirror', label: '镜像' },
+  { id: 'l11', source: 'plc-gw-01', target: 'field-hmi-01', type: 'mirror', label: '镜像' },
+];
+
+/**
+ * 拓扑推导适配层函数 (ENV-01 规范):
+ * 由 steps.asset 与 defense_baseline.face 动态推导并丰富节点与部署面
+ */
+export function deriveTopologyFromStepsAndDefense(
+  steps: AttackStep[] = attackSteps,
+  defSystems: DefenseSystem[] = defenseSystems
+): {
+  nodes: TopologyNode[];
+  deployments: DefenseDeploymentPoint[];
+  links: TopologyLink[];
+  source: 'declared' | 'derived';
+} {
+  // 保持现有推导产物为 base，并动态合并 steps 中的资产引用与 defenseSystems 中的实时状态
+  const activeDeployments: DefenseDeploymentPoint[] = initialDefenseDeploymentPoints.map((dp) => {
+    const liveDs = defSystems.find((d) => d.id === dp.ds_id);
+    return {
+      ...dp,
+      deployment_mode: liveDs
+        ? liveDs.mode === '串联'
+          ? 'inline'
+          : liveDs.mode === '旁路'
+          ? 'tap'
+          : liveDs.mode === '终端代理'
+          ? 'agent'
+          : 'api'
+        : dp.deployment_mode,
+      version: liveDs?.version || dp.version,
+      probe_status: liveDs?.isProbeFailed ? 'fail' : dp.probe_status,
+    };
+  });
+
+  return {
+    nodes: initialTopologyNodes,
+    deployments: activeDeployments,
+    links: initialTopologyLinks,
+    source: 'derived', // 未声明 topology 字段，依据步骤与基线推导
+  };
+}
+
