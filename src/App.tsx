@@ -54,9 +54,10 @@ export default function App() {
       const validTabs: CidtpTab[] = ['overview', 'scenario', 'matrix', 'realtime', 'arbitration', 'attribution', 'reports', 'environment'];
       if (validTabs.includes(hash)) return hash;
     }
-    return 'overview';
+    return 'environment';
   });
   const [campaignCode, setCampaignCode] = useState<string>('B3-WATER-001');
+  const [selectedCiioUnitId, setSelectedCiioUnitId] = useState<string>('10');
   const [isPaused, setIsPaused] = useState(false);
   const [showInvalidBanner, setShowInvalidBanner] = useState(true);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -312,6 +313,16 @@ export default function App() {
               defenseSystems={defenseSystems}
               tacticPhases={tacticPhases}
               onOpenArbitration={() => setCurrentTab('arbitration')}
+              selectedCiioUnitId={selectedCiioUnitId}
+              onOpenCiioTopology={(unitId) => {
+                setSelectedCiioUnitId(unitId);
+                setCurrentTab('environment');
+                if (typeof window !== 'undefined') {
+                  window.location.hash = 'environment';
+                }
+                addAuditLog('OPEN_CIIO_TOPOLOGY', `CIIO-${unitId}`, `从全国卫星大盘进入关基 #${unitId} 专属 5 层防御拓扑靶场`);
+                showToast(`已进入关基单位 #${unitId} 专属 5 层防御结构资产拓扑靶场`);
+              }}
             />
           )}
 
@@ -376,6 +387,18 @@ export default function App() {
               defenseSystems={defenseSystems}
               gateCheck={gateCheck}
               resetStatus={resetStatus}
+              selectedCiioUnitId={selectedCiioUnitId}
+              onSelectCiioUnit={(unitId) => {
+                setSelectedCiioUnitId(unitId);
+                addAuditLog('SWITCH_CIIO_TOPOLOGY', `CIIO-${unitId}`, `切换查看关基 #${unitId} 专属 5 层防御拓扑靶场`);
+                showToast(`已切换至关基单位 #${unitId} 专属 5 层防御资产拓扑`);
+              }}
+              onBackToMap={() => {
+                setCurrentTab('overview');
+                if (typeof window !== 'undefined') {
+                  window.location.hash = 'overview';
+                }
+              }}
               onUpdateSystemMode={handleUpdateSystemMode}
               onTriggerReset={handleTriggerReset}
               showToast={showToast}

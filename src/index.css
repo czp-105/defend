@@ -56,3 +56,68 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #33485E;
 }
+
+/* AntV L7 + 高德地图 关基单位呼吸灯坐标点样式 */
+.l7-ctrl-logo {
+  display: none !important;
+}
+
+@keyframes ciio-yellow-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+  50% {
+    transform: scale(1.75);
+    opacity: 0.25;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+@keyframes ciio-red-strobe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: brightness(1.3);
+  }
+  25% {
+    transform: scale(1.35);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+    filter: brightness(1.5);
+  }
+  75% {
+    transform: scale(1.45);
+    opacity: 0.2;
+  }
+}
+
+@keyframes ciio-red-wave {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+.ciio-pulse-ring-yellow {
+  animation: ciio-yellow-pulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.ciio-strobe-core-red {
+  animation: ciio-red-strobe 0.85s ease-in-out infinite;
+}
+
+.ciio-wave-ring-red {
+  animation: ciio-red-wave 1.3s ease-out infinite;
+}
+

@@ -16,11 +16,15 @@ import {
   Sliders,
 } from 'lucide-react';
 import { LayeredTopologyView } from './LayeredTopologyView';
+import { INITIAL_CIIO_UNITS } from '../../data/ciioUnitsTopologyData';
 
 interface EnvironmentTestbedViewProps {
   defenseSystems: DefenseSystem[];
   gateCheck: GateCheckStatus;
   resetStatus: ResetStatus;
+  selectedCiioUnitId?: string;
+  onSelectCiioUnit?: (unitId: string) => void;
+  onBackToMap?: () => void;
   onUpdateSystemMode: (id: string, mode: '串联' | '旁路' | '终端代理' | '接口') => void;
   onTriggerReset: () => void;
   showToast: (msg: string, type?: 'success' | 'warning' | 'info') => void;
@@ -30,6 +34,9 @@ export const EnvironmentTestbedView: React.FC<EnvironmentTestbedViewProps> = ({
   defenseSystems,
   gateCheck,
   resetStatus,
+  selectedCiioUnitId = '10',
+  onSelectCiioUnit,
+  onBackToMap,
   onUpdateSystemMode,
   onTriggerReset,
   showToast,
@@ -37,6 +44,7 @@ export const EnvironmentTestbedView: React.FC<EnvironmentTestbedViewProps> = ({
   const [selectedDs, setSelectedDs] = useState<DefenseSystem>(defenseSystems[0]);
   const [isResetting, setIsResetting] = useState(false);
   const [viewMode, setViewMode] = useState<'topology' | 'baseline'>('topology');
+  const activeUnit = INITIAL_CIIO_UNITS.find((u) => u.id === selectedCiioUnitId) || INITIAL_CIIO_UNITS[0];
 
   const handleResetClick = () => {
     setIsResetting(true);
@@ -53,6 +61,9 @@ export const EnvironmentTestbedView: React.FC<EnvironmentTestbedViewProps> = ({
       <div className="h-[calc(100vh-140px)] w-full flex flex-col rounded-[4px] border border-[#223040] overflow-hidden bg-[#0A0E13]">
         <LayeredTopologyView
           defenseSystems={defenseSystems}
+          selectedCiioUnitId={selectedCiioUnitId}
+          onSelectCiioUnit={onSelectCiioUnit}
+          onBackToMap={onBackToMap}
           onSelectSystem={(dsId) => {
             const ds = defenseSystems.find((d) => d.id === dsId);
             if (ds) {
@@ -76,13 +87,13 @@ export const EnvironmentTestbedView: React.FC<EnvironmentTestbedViewProps> = ({
           </span>
           <div>
             <h1 className="text-base font-bold text-slate-100 flex items-center gap-2">
-              靶场环境与防御基线 (ENVIRONMENT & TESTBED BASELINE)
+              靶场环境与防御基线 · [{activeUnit.id} {activeUnit.shortName}]
               <span className="text-xs font-mono px-2 py-0.5 rounded-[4px] bg-[#0A0E13] border border-[#223040] text-cyan-400">
                 ENV-01 ~ ENV-05
               </span>
             </h1>
             <p className="text-xs text-slate-400">
-              10 套防御系统参数基线 · 阳性探针门禁 · PTP高精时钟偏差 · 出站守卫熔断 · 三级幂等复位
+              核心靶标：{activeUnit.targetSystem} · 10 套防御系统参数基线 · 阳性探针门禁 · 三级幂等复位
             </p>
           </div>
         </div>
